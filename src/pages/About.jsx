@@ -35,6 +35,7 @@ const About = () => {
                 <img
                   src={skill.imageUrl}
                   alt={skill.name}
+                  title={skill.name}
                   className="w-1/2 h-1/2 object-contain"
                 />
               </div>

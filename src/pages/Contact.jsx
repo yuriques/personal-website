@@ -1,14 +1,12 @@
-import React, { Suspense, useRef, useState } from "react";
+import { Suspense, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { Canvas } from "@react-three/fiber";
 import { Fox } from "../models/Fox";
 import Loader from "../components/Loader";
 import useAlert from "../hooks/useAlert";
 import Alert from "../components/Alert";
-import CTA from "../components/CTA";
 
 const Contact = () => {
-  const formRef = useRef(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [currentAnimation, setCurrentAnimation] = useState("idle");
@@ -75,7 +73,18 @@ const Contact = () => {
       {alert.show && <Alert {...alert} />}
       <div className="flex-1 min-w-[50%] flex flex-col">
         <h1 className="head-text">Get in Touch</h1>
-
+        <div className="mt-5 flex flex-col gap-3 text-slate-500">
+          <p>
+            Feel free to reach out via{" "}
+            <a
+              href="https://www.linkedin.com/in/elizabeth-zhong1/"
+              className="text-blue-500"
+            >
+              LinkedIn{" "}
+            </a>
+            or alternatively email me via the following form:
+          </p>
+        </div>
         <form
           className="w-full flex flex-col gap-7 mt-14"
           onSubmit={handleSubmit}
