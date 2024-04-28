@@ -36,6 +36,7 @@ import vue from './vue.svg'
 import kubernetes from './kubernetes.svg'
 import docker from './docker.svg'
 import githubactions from './githubactions.svg'
+import azure from './azure.svg'
 
 export {
     css,
@@ -75,5 +76,6 @@ export {
     vue,
     kubernetes,
     docker,
-    githubactions
+    githubactions,
+    azure
 }

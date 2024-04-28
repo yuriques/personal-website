@@ -6,6 +6,7 @@ import Sky from "../models/Sky";
 import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
+import Footer from "../components/Footer";
 
 const Home = () => {
   const adjustIslandForScreenSize = () => {
@@ -85,6 +86,7 @@ const Home = () => {
           />
         </Suspense>
       </Canvas>
+      <Footer />
     </section>
   );
 };

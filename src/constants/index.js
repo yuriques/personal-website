@@ -1,5 +1,6 @@
 import { canva, quantium } from "../assets/images";
 import {
+    azure,
     bash,
     c,
     car,
@@ -117,7 +118,7 @@ export const skills = [
     {
         imageUrl: redux,
         name: "Redux",
-        type: "State Management",
+        type: "Frontend",
     },
     {
         imageUrl: sass,
@@ -148,6 +149,11 @@ export const skills = [
         imageUrl: githubactions,
         name: "Github Actions",
         type: "Deployment Tools",
+    },
+    {
+        imageUrl: azure,
+        name: "Azure",
+        type: "Cloud",
     }
 ];
 
@@ -199,12 +205,12 @@ export const socialLinks = [
     {
         name: 'GitHub',
         iconUrl: github,
-        link: 'https://github.com/YourGitHubUsername',
+        link: 'https://github.com/yuriques',
     },
     {
         name: 'LinkedIn',
         iconUrl: linkedin,
-        link: 'https://www.linkedin.com/in/YourLinkedInUsername',
+        link: 'https://www.linkedin.com/in/elizabeth-zhong1',
     }
 ];
 
@@ -214,6 +220,6 @@ export const projects = [
         theme: 'btn-back-red',
         name: 'Personal website',
         description: 'Developed a 3D personal portfolio to learn Three.js',
-        link: 'https://github.com/adrianhajdin/pricewise',
+        link: 'https://github.com/yuriques/personal-website',
     },
 ];
