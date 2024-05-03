@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { experiences, skills } from "../constants";
 import {
   VerticalTimeline,
@@ -8,6 +8,13 @@ import "react-vertical-timeline-component/style.min.css";
 import CTA from "../components/CTA";
 
 const About = () => {
+  const [activeSkillFilter, setActiveSkillFilter] = useState();
+  const filteredSkills = activeSkillFilter
+    ? skills.filter((skill) => skill.type === activeSkillFilter)
+    : skills;
+
+  const skillTypes = [...new Set(skills.map((skill) => skill.type))];
+
   return (
     <section className="max-container">
       <h1 className="head-text">
@@ -26,9 +33,30 @@ const About = () => {
 
       <div className="py-10 flex flex-col">
         <h3 className="subhead-text">My Skills</h3>
+        <div className="justify-left mt-8 select-none flex">
+          {skillTypes.map((type) => (
+            <button
+              key={type}
+              className={`py-2 px-4 shadow-md no-underline rounded-full text-white ${
+                activeSkillFilter === undefined || type === activeSkillFilter
+                  ? "bg-blue-500"
+                  : "bg-blue-200"
+              } font-semibold text-sm transition ease-in-out hover:-translate-y-1 hover:scale-105 hover:text-white focus:outline-none active:shadow-none mr-2 duration-150`}
+              onClick={() => {
+                if (activeSkillFilter === type) {
+                  setActiveSkillFilter(undefined);
+                } else {
+                  setActiveSkillFilter(type);
+                }
+              }}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
 
         <div className="mt-16 flex flex-wrap gap12">
-          {skills.map((skill) => (
+          {filteredSkills.map((skill) => (
             <div className="block-container w-20 h-20" key={skill.name}>
               <div className="btn-back rounded-xl" />
               <div className="btn-front rounded-xl flex justify-center items-center">

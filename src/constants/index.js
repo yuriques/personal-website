@@ -78,22 +78,7 @@ export const skills = [
     {
         imageUrl: bash,
         name: "Bash",
-        type: "Scripting",
-    },
-    {
-        imageUrl: git,
-        name: "Git",
-        type: "Version Control",
-    },
-    {
-        imageUrl: github,
-        name: "GitHub",
-        type: "Version Control",
-    },
-    {
-        imageUrl: mongodb,
-        name: "MongoDB",
-        type: "Database",
+        type: "DevOps",
     },
     {
         imageUrl: nextjs,
@@ -138,22 +123,22 @@ export const skills = [
     {
         imageUrl: kubernetes,
         name: "Kubernetes",
-        type: "Deployment Tools",
+        type: "DevOps",
     },
     {
         imageUrl: docker,
         name: "Docker",
-        type: "Deployment Tools",
+        type: "DevOps",
     },
     {
         imageUrl: githubactions,
         name: "Github Actions",
-        type: "Deployment Tools",
+        type: "DevOps",
     },
     {
         imageUrl: azure,
         name: "Azure",
-        type: "Cloud",
+        type: "DevOps",
     }
 ];
 
