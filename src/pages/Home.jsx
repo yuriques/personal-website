@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import Loader from "../components/Loader";
 import Island from "../models/Island";
@@ -7,25 +7,8 @@ import Bird from "../models/Bird";
 import Plane from "../models/Plane";
 import HomeInfo from "../components/HomeInfo";
 import Footer from "../components/Footer";
-
+import { OrbitControls } from "@react-three/drei";
 const Home = () => {
-  const adjustIslandForScreenSize = () => {
-    let screenScale;
-    let screenPosition = [0, -6.5, -43];
-    let rotation = [0.1, 4.7, 0];
-
-    if (window.innerWidth < 768) {
-      screenScale = [0.9, 0.9, 0.9];
-    } else {
-      screenScale = [1, 1, 1];
-    }
-
-    return [screenScale, screenPosition, rotation];
-  };
-
-  const [islandScale, islandPosition, islandRotation] =
-    adjustIslandForScreenSize();
-
   const adjustPlaneForScreenSize = () => {
     let screenScale;
     let screenPosition;
@@ -44,18 +27,38 @@ const Home = () => {
   const [planeScale, planePosition] = adjustPlaneForScreenSize();
 
   const [isRotating, setIsRotating] = useState(false);
-  const [currentStage, setCurrentStage] = useState(1);
+  const [currentStage, setCurrentStage] = useState(0);
+
+  // TODO: we don't want to register this event handler every time there is a stage change
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      switch (event.keyCode) {
+        case 37: // left arrow
+          setCurrentStage((currentStage - 1 < 0 ? 3 : currentStage - 1) % 4);
+          break;
+        case 39: // right arrow
+          setCurrentStage((currentStage + 1) % 4);
+          break;
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Clean up event listener on unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [currentStage, setCurrentStage]);
 
   return (
     <section className="w-full h-screen relative">
       <div className="absolute top-28 left-0 right-0 z-10 flex items-center justify-center">
-        {currentStage && <HomeInfo currentStage={currentStage} />}
+        {currentStage !== null && <HomeInfo currentStage={currentStage} />}
       </div>
       <Canvas
         className={`w-full h-screen bg-transparent ${
           isRotating ? "cursor-grabbing" : "cursor.grab"
         }`}
-        camera={{ near: 0.1, far: 1000 }} // objects closer than near and further than far won't be rendered
+        camera={{ position: [0, 0, 0] }}
       >
         <Suspense fallback={<Loader />}>
           <directionalLight position={[1, 1, 1]} intensity={2} />
@@ -70,13 +73,8 @@ const Home = () => {
           <Sky isRotating={isRotating} />
           <Bird />
           <Island
-            position={islandPosition}
-            scale={islandScale}
-            rotation={islandRotation}
-            isRotating={isRotating}
-            setIsRotation={setIsRotating}
-            currentState={currentStage}
             setCurrentStage={setCurrentStage}
+            currentStage={currentStage}
           />
           <Plane
             position={planePosition}
@@ -84,6 +82,7 @@ const Home = () => {
             rotation={[0, 20, 0]}
             isRotating={isRotating}
           />
+          <OrbitControls enableZoom={false} />
         </Suspense>
       </Canvas>
       <Footer />

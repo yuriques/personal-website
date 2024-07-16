@@ -7,141 +7,72 @@ Title: Fox's islands
 */
 
 // Interactable models can't be primitive
+import * as THREE from "three";
 
-import React, { useRef, useEffect } from "react";
+import { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import islandScene from "../assets/3d/island.glb";
 
-export function Island({
-  isRotating,
-  setIsRotation,
-  currentStage,
-  setCurrentStage,
-  ...props
-}) {
+export function Island({ ...props }) {
+  const stagePositions = {
+    0: { x: 0, y: 10, z: 40 },
+    1: { x: -23, y: 3, z: 20 },
+    2: { x: -3, y: 12, z: 10 },
+    3: { x: 18, y: 4, z: 35 },
+  };
   const islandRef = useRef();
-  const { gl, viewport } = useThree();
   const { nodes, materials } = useGLTF(islandScene);
 
-  const lastX = useRef(0);
-  const rotationSpeed = useRef(0);
-  const dampingFactor = 0.95;
+  const ghostMesh = useRef();
 
-  const handlePointerDown = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setIsRotation(true);
+  useFrame((state) => {
+    state.camera.position.lerp(
+      {
+        ...stagePositions[props.currentStage],
+        z: stagePositions[props.currentStage].z + 5,
+      },
+      0.03
+    );
 
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-
-    lastX.current = clientX;
-  };
-
-  const handlePointerUp = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setIsRotation(false);
-  };
-
-  const handlePointerMove = (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-
-    if (isRotating) {
-      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-
-      const delta = (clientX - lastX.current) / viewport.width;
-
-      islandRef.current.rotation.y += delta * 0.01 * Math.PI;
-
-      lastX.current = clientX;
-
-      rotationSpeed.current = delta * 0.01 * Math.PI;
-    }
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowLeft") {
-      if (!isRotating) setIsRotation(true);
-      islandRef.current.rotation.y += 0.01 * Math.PI;
-      rotationSpeed.current = 0.0125;
-    } else if (e.key === "ArrowRight") {
-      if (!isRotating) setIsRotation(true);
-      islandRef.current.rotation.y -= 0.01 * Math.PI;
-      rotationSpeed.current = -0.0125;
-    }
-  };
-
-  const handleKeyUp = (e) => {
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      setIsRotation(false);
-    }
-  };
-
-  useFrame(() => {
-    if (!isRotating) {
-      rotationSpeed.current *= dampingFactor;
-
-      if (Math.abs(rotationSpeed.current) < 0.001) {
-        rotationSpeed.current = 0;
-      }
-
-      // slows down the rotation based on speed easy ease
-      islandRef.current.rotation.y += rotationSpeed.current;
-    } else {
-      // Ensure that the rotation value stays within a range [0, 2 * Math.PI]
-      const rotation = islandRef.current.rotation.y;
-
-      const normalizedRotation =
-        ((rotation % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-
-      // Set the current stage based on the island's orientation
-      switch (true) {
-        case normalizedRotation >= 5.45 && normalizedRotation <= 5.85:
-          setCurrentStage(4);
-          break;
-        case normalizedRotation >= 0.85 && normalizedRotation <= 1.3:
-          setCurrentStage(3);
-          break;
-        case normalizedRotation >= 2.4 && normalizedRotation <= 2.6:
-          setCurrentStage(2);
-          break;
-        case normalizedRotation >= 4.25 && normalizedRotation <= 4.75:
-          setCurrentStage(1);
-          break;
-        default:
-          setCurrentStage(null);
-      }
-    }
+    ghostMesh.current.position.lerp(
+      {
+        ...stagePositions[props.currentStage],
+        z: stagePositions[props.currentStage].z - 5,
+      },
+      0.03
+    );
+    // ghostMesh.current.updateMatrix();
+    state.camera.lookAt(
+      ghostMesh.current.position.x,
+      ghostMesh.current.position.y,
+      ghostMesh.current.position.z
+    );
+    // state.camera.updateProjectionMatrix();
   });
 
-  useEffect(() => {
-    const canvas = gl.domElement; // since attaching elements to regular dom elements won't work since they're inside the canvas
-    canvas.addEventListener("pointerdown", handlePointerDown);
-    canvas.addEventListener("pointerup", handlePointerUp);
-    canvas.addEventListener("pointermove", handlePointerMove);
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      canvas.removeEventListener("pointerdown", handlePointerDown);
-      canvas.removeEventListener("pointerup", handlePointerUp);
-      canvas.removeEventListener("pointermove", handlePointerMove);
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-    handleKeyDown,
-    handleKeyUp,
-  ]);
+  const zoomToView = (stage) => {
+    props.setCurrentStage(stage);
+  };
 
   return (
-    <a.group ref={islandRef} {...props}>
+    <a.group ref={islandRef}>
+      {Object.keys(stagePositions).map((stage) => (
+        <Moment
+          key={stage}
+          data={{
+            color: "#bbbbbb",
+            position: Object.values(stagePositions[stage]),
+          }}
+          zoomToView={() => zoomToView(stage)}
+        />
+      ))}
+
+      <mesh ref={ghostMesh}>
+        <primitive object={new THREE.BoxGeometry(1, 1, 1)} />
+        <meshStandardMaterial wireframe color="red" />
+      </mesh>
       <mesh
         geometry={nodes.polySurface944_tree_body_0.geometry}
         material={materials.PaletteMaterial001}
@@ -171,6 +102,43 @@ export function Island({
         material={materials.PaletteMaterial001}
       />
     </a.group>
+  );
+}
+
+//https://codesandbox.io/s/three-fiber-zoom-to-object-ghost-solution-z6xw1?file=/src/App.js:366-1307
+function Moment({ data, zoomToView }) {
+  const meshRef = useRef();
+
+  const [hover, setHover] = useState(false);
+  const [clicked, setClicked] = useState(false);
+
+  useEffect(() => {
+    document.body.style.cursor = hover ? "pointer" : "default";
+  }, [hover]);
+
+  useLayoutEffect(() => {
+    meshRef.current.position.x = data.position[0];
+    meshRef.current.position.y = data.position[1];
+    meshRef.current.position.z = data.position[2];
+  });
+
+  return (
+    <mesh
+      ref={meshRef}
+      onPointerOver={() => {
+        setHover(true);
+      }}
+      onPointerOut={() => {
+        setHover(false);
+      }}
+      onClick={() => {
+        setClicked(!clicked);
+        zoomToView(meshRef);
+      }}
+    >
+      <primitive object={new THREE.BoxGeometry(1, 1, 1)} />
+      <meshStandardMaterial wireframe color="grey" />
+    </mesh>
   );
 }
 
