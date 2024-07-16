@@ -39,8 +39,8 @@ const About = () => {
               key={type}
               className={`py-2 px-4 shadow-md no-underline rounded-full text-white ${
                 activeSkillFilter === undefined || type === activeSkillFilter
-                  ? "bg-blue-500"
-                  : "bg-blue-200"
+                  ? "btn-dark"
+                  : "btn-light"
               } font-semibold text-sm transition ease-in-out hover:-translate-y-1 hover:scale-105 hover:text-white focus:outline-none active:shadow-none mr-2 duration-150`}
               onClick={() => {
                 if (activeSkillFilter === type) {

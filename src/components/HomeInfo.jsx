@@ -10,27 +10,27 @@ const InfoBox = ({ text, link, btnText }) => (
 );
 
 const renderContent = {
-  1: (
-    <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-blue py-4 px-8 text-white mx-5">
+  0: (
+    <h1 className="sm:text-xl sm:leading-snug text-center neo-brutalism-green py-4 px-8 text-white mx-5">
       Hi, I am <span className="font-semibold">Elizabeth</span>👋
       <br />A Software Engineer from Australia
     </h1>
   ),
-  2: (
+  1: (
     <InfoBox
       text="Worked with many companies and picked up many skills along the way"
       link="/about"
       btnText="Learn more"
     />
   ),
-  3: (
+  2: (
     <InfoBox
       text="Tinkered with many projects over the years. Check out what I've done"
       link="/projects"
       btnText="Visit my projects"
     />
   ),
-  4: (
+  3: (
     <InfoBox
       text="Want to chat? I'm just a few keystrokes away"
       link="/contact"

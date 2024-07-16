@@ -78,7 +78,7 @@ const Contact = () => {
             Feel free to reach out via{" "}
             <a
               href="https://www.linkedin.com/in/elizabeth-zhong1/"
-              className="text-blue-500"
+              className="text-lime-800"
             >
               LinkedIn{" "}
             </a>
