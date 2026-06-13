@@ -1,6 +1,9 @@
-import React from "react";
+interface AlertProps {
+  type: "danger" | "success";
+  text: string;
+}
 
-const Alert = ({ type, text }) => {
+const Alert = ({ type, text }: AlertProps) => {
   return (
     <div className="absolute top-10 left-0 right-0 flex justify-center items-center">
       <div

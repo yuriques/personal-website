@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState, type ChangeEvent, type FormEvent } from "react";
 import emailjs from "@emailjs/browser";
 import { Canvas } from "@react-three/fiber";
 import { Fox } from "../models/Fox";
@@ -13,7 +13,9 @@ const Contact = () => {
 
   const { alert, showAlert, hideAlert } = useAlert();
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -21,7 +23,7 @@ const Contact = () => {
 
   const handleBlur = () => setCurrentAnimation("idle");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setCurrentAnimation("hit");
@@ -36,12 +38,11 @@ const Contact = () => {
           to_email: "elizabeth.zhong@hotmail.com",
           message: form.message,
         },
-        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY,
       )
       .then(() => {
         setIsLoading(false);
         showAlert({
-          show: true,
           text: "Message sent successfully!",
           type: "success",
         });
@@ -50,12 +51,11 @@ const Contact = () => {
           setCurrentAnimation("idle");
           setForm({ name: "", email: "", message: "" });
           hideAlert();
-        }, [3000]);
+        }, 3000);
       })
       .catch((error) => {
         setIsLoading(false);
         showAlert({
-          show: true,
           text: "I didn't get your message",
           type: "danger",
         });
@@ -64,7 +64,7 @@ const Contact = () => {
         setCurrentAnimation("idle");
         setTimeout(() => {
           hideAlert();
-        }, [3000]);
+        }, 3000);
       });
   };
 
@@ -146,7 +146,7 @@ const Contact = () => {
           <Canvas
             camera={{
               position: [0, 0, 5],
-              fox: 75,
+              fov: 75,
               near: 0.1,
               far: 1000,
             }}

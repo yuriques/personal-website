@@ -41,12 +41,12 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .btn-dark {
-      background-color: var(--dark-green);
+    background-color: var(--dark-green);
   }
 
   .btn-light {
     background-color: var(--light-green);
-}
+  }
 
   .input {
     @apply bg-white border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-lime-900 focus:border-lime-900 block w-full p-2.5 mt-2.5 font-normal shadow-card;
@@ -73,11 +73,13 @@ body:has(.card[data-color="green"]:hover) {
   }
 
   .info-box {
-    @apply mx-5 relative flex text-white flex-col gap-3 max-w-2xl neo-brutalism-green pt-4 pb-12 px-8;
+    @apply mx-5 relative flex text-white flex-col gap-4 max-w-sm rounded-2xl pt-6 pb-14 px-8 bg-white/10 backdrop-blur-lg border border-white/20 shadow-lg;
   }
 
   .neo-btn {
-    @apply py-3 px-6 rounded-lg text-lime-900 text-center font-semibold sm:w-1/2 w-[90%] -bottom-5 absolute mx-auto right-0 left-0 flex justify-center items-center gap-3;
+    @apply py-3 px-6 rounded-full text-white text-center font-semibold sm:w-1/2 w-[90%] -bottom-5 absolute mx-auto right-0 left-0 flex justify-center items-center gap-3 transition-all duration-200 hover:scale-105;
+    background: linear-gradient(135deg, #84834a, #a19759);
+    box-shadow: 0 4px 15px rgba(134, 119, 49, 0.3);
   }
 
   .cta {
@@ -100,7 +102,8 @@ body:has(.card[data-color="green"]:hover) {
 .logo {
   border-radius: 8.889px;
   background: #fff;
-  box-shadow: 0px 10px 35px -4px rgba(67, 83, 255, 0.15),
+  box-shadow:
+    0px 10px 35px -4px rgba(67, 83, 255, 0.15),
     0px 1.5px 4px -1px rgba(67, 83, 255, 0.2);
 }
 
@@ -173,23 +176,6 @@ body:has(.card[data-color="green"]:hover) {
 
 .block-container:hover > .btn-front {
   transform: translateZ(80px) translateY(-5px) rotateX(15deg) rotateY(15deg);
-}
-
-/* Neo Brutalism */
-.neo-brutalism-green {
-  background: #84834a;
-  position: relative;
-  border-radius: 10px;
-  border: #84834a;
-  box-shadow: 0.6vmin 0.6vmin #756f4c, 1vmin 1vmin #9F924D, 1vmin 1vmin #a19759,
-    0.65vmin 1vmin #a19759, 1vmin 0.65vmin #a19759;
-}
-
-.neo-brutalism-white {
-  background: #fff;
-  border: #fff;
-  box-shadow: 0.6vmin 0.6vmin #fff, 1vmin 1vmin #dfe4c7, 1vmin 1vmin #dfe4c7,
-    0.65vmin 1vmin #dfe4c7, 1vmin 0.65vmin #dfe4c7;
 }
 
 .socials {

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import SplitText from "gsap/SplitText";
 import { experiences, skills } from "../constants";
 import {
   VerticalTimeline,
@@ -6,20 +8,68 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import CTA from "../components/CTA";
+import { SkillIcons } from "../components/about/SkillIcons";
+
+gsap.registerPlugin(SplitText);
 
 const About = () => {
-  const [activeSkillFilter, setActiveSkillFilter] = useState();
+  const [activeSkillFilter, setActiveSkillFilter] = useState<
+    string | undefined
+  >();
   const filteredSkills = activeSkillFilter
     ? skills.filter((skill) => skill.type === activeSkillFilter)
     : skills;
 
   const skillTypes = [...new Set(skills.map((skill) => skill.type))];
+  const introRef = useRef<HTMLSpanElement>(null);
+  const nameRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    if (!introRef.current || !nameRef.current) return;
+
+    const introSplit = SplitText.create(introRef.current, {
+      type: "words",
+      autoSplit: true,
+      onSplit(self: { words: Element[] }) {
+        return gsap.from(self.words, {
+          duration: 1,
+          y: 100,
+          autoAlpha: 0,
+          stagger: 0.05,
+        });
+      },
+    });
+
+    const nameSplit = SplitText.create(nameRef.current, {
+      type: "chars",
+      onSplit(self: { chars: Element[] }) {
+        self.chars.forEach((char) => {
+          char.classList.add("blue-gradient_text");
+        });
+
+        return gsap.from(self.chars, {
+          duration: 0.8,
+          autoAlpha: 0,
+          stagger: 0.03,
+          delay: 1,
+        });
+      },
+    });
+
+    return () => {
+      introSplit.revert();
+      nameSplit.revert();
+    };
+  }, []);
 
   return (
     <section className="max-container">
       <h1 className="head-text">
-        Hello, I'm{" "}
-        <span className="blue-gradient_text font-semibold drop-shadow">
+        <span ref={introRef}>Hello, I'm </span>
+        <span
+          ref={nameRef}
+          className="blue-gradient_text font-semibold drop-shadow"
+        >
           Elizabeth
         </span>
       </h1>
@@ -54,23 +104,9 @@ const About = () => {
             </button>
           ))}
         </div>
-
-        <div className="mt-16 flex flex-wrap gap12">
-          {filteredSkills.map((skill) => (
-            <div className="block-container w-20 h-20" key={skill.name}>
-              <div className="btn-back rounded-xl" />
-              <div className="btn-front rounded-xl flex justify-center items-center">
-                <img
-                  src={skill.imageUrl}
-                  alt={skill.name}
-                  title={skill.name}
-                  className="w-1/2 h-1/2 object-contain"
-                />
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
+
+      <SkillIcons skills={filteredSkills} />
 
       <div className="py-16">
         <h3 className="subhead-text">Work Experience</h3>
