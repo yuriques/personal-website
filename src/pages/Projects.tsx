@@ -2,13 +2,54 @@ import { projects } from "../constants";
 import { Link } from "react-router-dom";
 import { arrow } from "../assets/icons";
 import CTA from "../components/CTA";
+import { useRef } from "react";
+import { gsap } from "gsap";
+import SplitText from "gsap/SplitText";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP, SplitText);
 
 const Projects = () => {
+  const projectsRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    SplitText.create(".head-text", {
+      type: "words",
+      autoSplit: true,
+      onSplit(self: { words: Element[] }) {
+        return gsap.from(self.words, {
+          duration: 1,
+          y: 100,
+          autoAlpha: 0,
+          stagger: 0.05,
+        });
+      },
+    });
+
+    SplitText.create(projectsRef.current, {
+      type: "chars",
+      onSplit(self: { chars: Element[] }) {
+        self.chars.forEach((char) => {
+          char.classList.add("blue-gradient_text");
+        });
+
+        return gsap.from(self.chars, {
+          duration: 0.8,
+          autoAlpha: 0,
+          stagger: 0.03,
+          delay: 1,
+        });
+      },
+    });
+  }, []);
   return (
     <section className="max-container">
       <h1 className="head-text">
         My{" "}
-        <span className="blue-gradient_text font-semibold drop-shadow">
+        <span
+          ref={projectsRef}
+          className="blue-gradient_text font-semibold drop-shadow"
+        >
           Projects
         </span>
       </h1>

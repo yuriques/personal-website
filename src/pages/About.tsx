@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { gsap } from "gsap";
 import SplitText from "gsap/SplitText";
 import { experiences, skills } from "../constants";
@@ -8,9 +8,11 @@ import {
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
 import CTA from "../components/CTA";
+import SparkIcon from "../components/SparkIcon";
 import { SkillIcons } from "../components/about/SkillIcons";
+import { useGSAP } from "@gsap/react";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(useGSAP, SplitText);
 
 const About = () => {
   const [activeSkillFilter, setActiveSkillFilter] = useState<
@@ -24,10 +26,10 @@ const About = () => {
   const introRef = useRef<HTMLSpanElement>(null);
   const nameRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
     if (!introRef.current || !nameRef.current) return;
 
-    const introSplit = SplitText.create(introRef.current, {
+    SplitText.create(introRef.current, {
       type: "words",
       autoSplit: true,
       onSplit(self: { words: Element[] }) {
@@ -40,7 +42,7 @@ const About = () => {
       },
     });
 
-    const nameSplit = SplitText.create(nameRef.current, {
+    SplitText.create(nameRef.current, {
       type: "chars",
       onSplit(self: { chars: Element[] }) {
         self.chars.forEach((char) => {
@@ -55,22 +57,18 @@ const About = () => {
         });
       },
     });
-
-    return () => {
-      introSplit.revert();
-      nameSplit.revert();
-    };
-  }, []);
+  });
 
   return (
     <section className="max-container">
-      <h1 className="head-text">
+      <h1 className="head-text flex items-center gap-2">
         <span ref={introRef}>Hello, I'm </span>
         <span
           ref={nameRef}
-          className="blue-gradient_text font-semibold drop-shadow"
+          className="blue-gradient_text font-semibold drop-shadow relative"
         >
           Elizabeth
+          <SparkIcon className="text-lime-800 absolute -z-10 -right-20 -top-4" />
         </span>
       </h1>
       <div className="mt-5 flex flex-col gap-3 text-slate-500">

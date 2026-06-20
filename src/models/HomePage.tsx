@@ -6,6 +6,11 @@ import GhostKittyScene from "./GhostKittyScene";
 import OrangeCat from "./OrangeCat";
 import { STAGE_POSITIONS } from "./constants";
 import type { Mesh } from "three";
+import {
+  EffectComposer,
+  Outline,
+  Selection,
+} from "@react-three/postprocessing";
 
 const CAMERA_LERP_SPEED = 0.03;
 
@@ -39,13 +44,23 @@ function HomePage({ currentStage, setCurrentStage }: HomePageProps) {
 
   return (
     <a.group>
-      {Object.entries(STAGE_POSITIONS).map(([stage, pos]) => (
-        <Moment
-          key={stage}
-          position={[pos.x, pos.y, pos.z]}
-          onSelect={() => setCurrentStage(Number(stage))}
-        />
-      ))}
+      <Selection>
+        <EffectComposer multisampling={8} autoClear={false}>
+          <Outline
+            blur
+            visibleEdgeColor="white"
+            edgeStrength={5}
+            width={1000}
+          />
+        </EffectComposer>
+        {Object.entries(STAGE_POSITIONS).map(([stage, pos]) => (
+          <Moment
+            key={stage}
+            position={[pos.x, pos.y, pos.z]}
+            onSelect={() => setCurrentStage(Number(stage))}
+          />
+        ))}
+      </Selection>
 
       {/* Invisible target mesh for camera look-at */}
       <mesh ref={ghostMesh} visible={false}>

@@ -1,7 +1,8 @@
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import type { RefObject } from "react";
 import type { Group } from "three";
+import { Select } from "@react-three/postprocessing";
 
 interface PawPrintProps {
   color?: string;
@@ -12,31 +13,38 @@ function PawPrint({
   color = "#a0785a",
   groupRef,
 }: PawPrintProps & { groupRef?: RefObject<Group | null> }) {
+  const [highlight, setHighlight] = useState(false);
   return (
-    <group ref={groupRef}>
-      {/* Main pad */}
-      <mesh position={[0, 0, 0]} renderOrder={1}>
-        <circleGeometry args={[0.38, 32]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
-      </mesh>
-      {/* Toe pads */}
-      <mesh position={[-0.25, 0.35, -0.35]} renderOrder={1}>
-        <circleGeometry args={[0.16, 24]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
-      </mesh>
-      <mesh position={[0.25, 0.35, -0.35]} renderOrder={1}>
-        <circleGeometry args={[0.16, 24]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
-      </mesh>
-      <mesh position={[-0.4, 0, -0.1]} renderOrder={1}>
-        <circleGeometry args={[0.13, 24]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
-      </mesh>
-      <mesh position={[0.4, 0, -0.1]} renderOrder={1}>
-        <circleGeometry args={[0.13, 24]} />
-        <meshBasicMaterial color={color} transparent opacity={0.5} />
-      </mesh>
-    </group>
+    <Select enabled={highlight}>
+      <group
+        ref={groupRef}
+        onPointerEnter={() => setHighlight(true)}
+        onPointerLeave={() => setHighlight(false)}
+      >
+        {/* Main pad */}
+        <mesh position={[0, 0, 0]} renderOrder={1}>
+          <circleGeometry args={[0.38, 32]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} />
+        </mesh>
+        {/* Toe pads */}
+        <mesh position={[-0.25, 0.35, -0.35]} renderOrder={1}>
+          <circleGeometry args={[0.16, 24]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} />
+        </mesh>
+        <mesh position={[0.25, 0.35, -0.35]} renderOrder={1}>
+          <circleGeometry args={[0.16, 24]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} />
+        </mesh>
+        <mesh position={[-0.4, 0, -0.1]} renderOrder={1}>
+          <circleGeometry args={[0.13, 24]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} />
+        </mesh>
+        <mesh position={[0.4, 0, -0.1]} renderOrder={1}>
+          <circleGeometry args={[0.13, 24]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} />
+        </mesh>
+      </group>
+    </Select>
   );
 }
 
